@@ -11,3 +11,5 @@ wheels/
 
 #project files
 .python-version
+output/
+input/
