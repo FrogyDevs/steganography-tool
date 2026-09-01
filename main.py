@@ -1,4 +1,4 @@
-from steganography import text_based
+from steganography import text_based, image_based
 
 def op_selector():
     print(f'choose an operation (1-3):\n1)    hide\n2)    reveal\n3)  capacity')
@@ -10,7 +10,7 @@ def carrier_type():
     selected = input()
     return selected
 
-def text_encrypt(inputfile: str, msg: str):
+def text_encoder(inputfile: str, msg: str):
     encoder = text_based(inputfile, msg)
     encoded_content = encoder.encode()
     with open('test.txt', encoding='utf-8') as f:
@@ -23,8 +23,18 @@ def text_decoder(inputfile: str):
     decoded_txt = decoder.decode()
     print(decoded_txt)
 
+def image_encoder(inputfile: str, msg: str):
+    encoder = image_based(inputfile, msg)
+    encoder.encode(inputfile, msg)
+
+def image_decoder(inputfile: str):
+    decoder = image_based(inputfile)
+    decoded_msg = decoder.decode(inputfile)
+    print(decoded_msg)
+
 def main():
-    text_decoder('output.txt')
+    image_encoder('input/image.png', 'This is a secret message')
+    image_decoder('output/image.png')
     
 
 if __name__ == "__main__":

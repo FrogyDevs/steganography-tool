@@ -62,7 +62,7 @@ class image_based():
         img = Image.open(carrier_file).convert('RGB')
         pixels = list(img.getdata())
 
-        bits = _text_to_bits(msg) + self.delimeter
+        bits = self._text_to_bits(msg) + self.delimeter
         capacity = len(pixels) * 3
         if len(bits) > capacity:
             raise ValueError(f'Message too large')
@@ -78,5 +78,19 @@ class image_based():
             new_pixels.append(tuple(channels))
 
         out = Image.new('RGB', img.size)
-        out.save(f'output{self.type}')
+        out.putdata(new_pixels)
+        out.save(f'output/image{self.type}')
         return 'Saved'
+
+    def decode(self, carrier_file: str):
+        img = Image.open(carrier_file).convert('RGB')
+        pixels = img.getdata()
+
+        bits = []
+        for r, g, b in pixels:
+            for channel in (r, g, b):
+                bits.append(str(channel & 1))
+                if len(bits) >= 16 and ''.join(bits[-16:]) == self.delimeter:
+                    message_bits = ''.join(bits[:-16])
+                    return self._bits_to_text(message_bits)
+        raise ValueError('delimiter not present in the image - no hidden message found')
