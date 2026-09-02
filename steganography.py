@@ -1,5 +1,6 @@
 import sys
 from PIL import Image
+from pypdf import PdfReader, PdfWriter
 
 class text_based(): 
         def __init__(self, carrier, secret=None): #secret is the text to encode; carrier text of file
@@ -94,3 +95,19 @@ class image_based():
                     message_bits = ''.join(bits[:-16])
                     return self._bits_to_text(message_bits)
         raise ValueError('delimiter not present in the image - no hidden message found')
+
+class pdf_based:
+    def __init__(self, carrier, secret=None):
+        self.carrier = carrier
+        self.secret = secret
+
+    def encode(self):
+        writer = PdfWriter()
+        writer.append(PdfReader(self.carrier))
+        writer.add_metadata({"/HiddenMessage": self.secret})
+        writer.write("output/output.pdf")
+        
+    def decode(self):
+        reader = PdfReader(self.carrier)
+        metadata = reader.metadata
+        return metadata.get("/HiddenMessage", "No hidden message found")

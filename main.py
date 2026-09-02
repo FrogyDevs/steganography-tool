@@ -1,4 +1,4 @@
-from steganography import text_based, image_based
+from steganography import text_based, image_based, pdf_based
 
 def op_selector():
     print(f'choose an operation (1-3):\n1)    hide\n2)    reveal\n3)  capacity')
@@ -32,10 +32,19 @@ def image_decoder(inputfile: str):
     decoded_msg = decoder.decode(inputfile)
     print(decoded_msg)
 
+def pdf_encoder(inputfile: str, msg: str):
+    encoder = pdf_based(inputfile, msg)
+    encoder.encode()
+
+def pdf_decoder(inputfile: str):
+    decoder = pdf_based(inputfile)
+    decoded_msg = decoder.decode()
+    print(decoded_msg)
+
 def main():
-    image_encoder('input/image.png', 'This is a secret message')
-    image_decoder('output/image.png')
-    
+    pdf_encoder('input/input.pdf', 'This is a hidden message in the PDF file.')
+    pdf_decoder('output/output.pdf')
+
 
 if __name__ == "__main__":
     main()
