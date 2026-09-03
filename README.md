@@ -2,10 +2,11 @@
 - [X] ~~Text Files~~
 - [X] ~~Images~~
 - [X] ~~PDF Files~~
-- [ ] Audio Files
+- [X] Audio Files
 - [ ] Video Files
 - [ ] Office Documents
-- [ ] Executabless
+- [ ] Executables
+- [ ] CLI
 
 ### Disclaimer
 

@@ -1,4 +1,4 @@
-from steganography import text_based, image_based, pdf_based
+from steganography import text_based, image_based, pdf_based, audio_based
 
 def op_selector():
     print(f'choose an operation (1-3):\n1)    hide\n2)    reveal\n3)  capacity')
@@ -41,10 +41,18 @@ def pdf_decoder(inputfile: str):
     decoded_msg = decoder.decode()
     print(decoded_msg)
 
+def audio_encoder(inputfile: str, msg: str):
+    encoder = audio_based(inputfile, msg)
+    encoder.encode()
+
+def audio_decoder(inputfile: str):
+    decoder = audio_based(inputfile)
+    decoded_msg = decoder.decode()
+    print(decoded_msg)
+
 def main():
-    pdf_encoder('input/input.pdf', 'This is a hidden message in the PDF file.')
-    pdf_decoder('output/output.pdf')
-
-
+    audio_encoder('input/input.mp3', 'This is a secret message hidden in the audio file.')
+    audio_decoder('output/output.mp3')
+    
 if __name__ == "__main__":
     main()
