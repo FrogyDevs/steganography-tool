@@ -10,3 +10,6 @@ dependencies = [
     "pillow>=12.3.0",
     "pypdf>=6.16.2",
 ]
+
+[project.scripts]
+stego = "stego_tool.cli:main"
