@@ -1,30 +1,49 @@
-from steganography import text_based
+from steganography import text_based, image_based, pdf_based
 
 def op_selector():
     print(f'choose an operation (1-3):\n1)    hide\n2)    reveal\n3)  capacity')
     selected = input()
     return selected
 
-def carrier():
+def carrier_type():
     print(f'choose a carrier (1-5)\ntext')
     selected = input()
-def read_file(filepath):
-    with open(filepath) as f:
-        print(len(f.read()))
-        return f.read()
-            
-def text_to_text_ecrypt():
-    carrier = input(f'enter carrier filepath:\n')
-    msg = input(f'enter message to hide:\n')
-    textBased = text_based(carrier=read_file(carrier), secret=msg)
-    print(textBased.encode())
-    with open('testfile/output/text.txt') as f:
-        f.write(textBased.encode())
-        print(len(f.read()))
-    return f'Encoded file {carrier}'
+    return selected
+
+def text_encoder(inputfile: str, msg: str):
+    encoder = text_based(inputfile, msg)
+    encoded_content = encoder.encode()
+    with open('test.txt', encoding='utf-8') as f:
+        len_txt = f.read()
+    print(f'Len of original text:\n {len(len_txt)}')
+    print(f'Len of encoded text:\n{len(encoded_content)}')
+
+def text_decoder(inputfile: str):
+    decoder = text_based(inputfile)
+    decoded_txt = decoder.decode()
+    print(decoded_txt)
+
+def image_encoder(inputfile: str, msg: str):
+    encoder = image_based(inputfile, msg)
+    encoder.encode(inputfile, msg)
+
+def image_decoder(inputfile: str):
+    decoder = image_based(inputfile)
+    decoded_msg = decoder.decode(inputfile)
+    print(decoded_msg)
+
+def pdf_encoder(inputfile: str, msg: str):
+    encoder = pdf_based(inputfile, msg)
+    encoder.encode()
+
+def pdf_decoder(inputfile: str):
+    decoder = pdf_based(inputfile)
+    decoded_msg = decoder.decode()
+    print(decoded_msg)
 
 def main():
-    text_to_text_ecrypt()
+    pdf_encoder('input/input.pdf', 'This is a hidden message in the PDF file.')
+    pdf_decoder('output/output.pdf')
 
 
 if __name__ == "__main__":

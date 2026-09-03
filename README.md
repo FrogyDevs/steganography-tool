@@ -1,3 +1,12 @@
+### Roadmap
+- [X] ~~Text Files~~
+- [X] ~~Images~~
+- [X] ~~PDF Files~~
+- [ ] Audio Files
+- [ ] Video Files
+- [ ] Office Documents
+- [ ] Executabless
+
 ### Disclaimer
 
 [!WARNING]
