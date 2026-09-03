@@ -3,7 +3,7 @@
 - [X] ~~Images~~
 - [X] ~~PDF Files~~
 - [X] ~~Audio Files~~
-- [ ] Video Files
+- [X] ~~Video Files~~
 - [ ] Office Documents
 - [ ] Executables
 - [ ] CLI
