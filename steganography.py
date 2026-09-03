@@ -4,6 +4,9 @@ class text_based():
             self.secret = secret
             self.stego_text = stego_text
 
+        
+             
+
         def encode(self):
             bits = ''.join(format(ord(c), '08b') for c in self.secret)
             hidden = ''.join('\u200b' if b == '0' else '\u200c' for b in bits)

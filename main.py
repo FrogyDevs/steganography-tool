@@ -8,16 +8,24 @@ def op_selector():
 def carrier():
     print(f'choose a carrier (1-5)\ntext')
     selected = input()
-
-
+def read_file(filepath):
+    with open(filepath) as f:
+        print(len(f.read()))
+        return f.read()
+            
+def text_to_text_ecrypt():
+    carrier = input(f'enter carrier filepath:\n')
+    msg = input(f'enter message to hide:\n')
+    textBased = text_based(carrier=read_file(carrier), secret=msg)
+    print(textBased.encode())
+    with open('testfile/output/text.txt') as f:
+        f.write(textBased.encode())
+        print(len(f.read()))
+    return f'Encoded file {carrier}'
 
 def main():
-    selected_op = op_selector()
-    selected_car = carrier()
-    text = text_based("Meet me at the usual place.", "hello world")
-    stego_text = text.encode()
-    print(stego_text)
-    print(text.decode(stego_text))
+    text_to_text_ecrypt()
+
 
 if __name__ == "__main__":
     main()
