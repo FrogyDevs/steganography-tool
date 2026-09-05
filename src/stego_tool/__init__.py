@@ -1,3 +1,1 @@
-from .cli import main
-
-main()
+__all__ = []
