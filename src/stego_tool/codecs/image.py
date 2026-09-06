@@ -72,3 +72,30 @@ class ImageCodec:
                     message_bits = ''.join(bits[:-16])
                     return self._bits_to_text(message_bits)
         raise ValueError('delimiter not present in the image - no hidden message found')
+
+    def _has_hidden_message(self, carrier_file: str) -> bool:
+        img = Image.open(carrier_file).convert('RGB')
+        bits = []
+        for r, g, b in img.getdata():
+            for channel in (r, g, b):
+                bits.append(str(channel & 1))
+                if len(bits) >= 16 and ''.join(bits[-16:]) == self.DELIMITER:
+                    return True
+        return False
+
+    def clear(self, input_path: str | None = None, output_path: str | None = None):
+        input_path = str(input_path or self.carrier)
+        output_path = str(output_path or input_path)
+
+        if not self._has_hidden_message(input_path):
+            return 'No hidden message found; file unchanged.'
+
+        def writer(temp_path: Path):
+            img = Image.open(input_path).convert('RGB')
+            new_pixels = [(r & ~1, g & ~1, b & ~1) for r, g, b in img.getdata()]
+            out = Image.new('RGB', img.size)
+            out.putdata(new_pixels)
+            out.save(temp_path)
+
+        self._write_in_place(output_path, writer)
+        return 'Cleared'

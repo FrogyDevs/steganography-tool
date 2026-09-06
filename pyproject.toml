@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-stego = "stego_tool.cli:main"
+cloakbyte = "stego_tool.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]

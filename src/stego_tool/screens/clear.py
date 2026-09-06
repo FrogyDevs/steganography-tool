@@ -3,7 +3,6 @@ from textual.widgets import Label, Static
 from pathlib import Path
 
 from stego_tool.widgets.file_picker import FilePicker, FileSelected
-from stego_tool.widgets.message_input import MessageInput, MessageSubmitted
 
 from stego_tool.codecs.text import TextCodec
 from stego_tool.codecs.image import ImageCodec
@@ -24,9 +23,10 @@ CODEC_MAPPING = {
     '.mkv': VideoCodec,
 }
 
-class EncodeScreen(Screen):
+
+class ClearScreen(Screen):
     def compose(self):
-        yield Static("Encode Screen")
+        yield Static("Clear Screen")
         yield Label("Selected file: ", id="result-label")
         yield Label('', id='feedback')
 
@@ -49,20 +49,12 @@ class EncodeScreen(Screen):
         self._selected_path = path
         self._codec_cls = codec_cls
         self.query_one('#result-label', Label).update(f"Selected file: {path}")
-        self.app.push_screen(MessageInput(), callback=self.on_message_entered)
-
-    def on_message_entered(self, submitted: MessageSubmitted | None) -> None:
-        label = self.query_one('#result-label', Label)
-        if submitted is None or not submitted.message:
-            label.update("Decoding cancelled: no message entered.")
-            return
-
-        codec = self._codec_cls(str(self._selected_path), submitted.message)
+        codec = self._codec_cls(str(self._selected_path))
         try:
-            result = codec.encode()
-            self.query_one('#feedback', Label).update(f'Successfully encoded: {result}')
-            
+            result = codec.clear()
+            self.query_one('#feedback', Label).update(result)
         except Exception as exc:
             self.query_one('#feedback', Label).update(f'ERROR: {exc}')
             return
+
         self.app.set_timer(3, self.app.pop_screen)

@@ -29,3 +29,20 @@ class PdfCodec:
         reader = PdfReader(self.carrier)
         metadata = reader.metadata
         return metadata.get("/HiddenMessage", "No hidden message found")
+
+    def clear(self):
+        reader = PdfReader(self.carrier)
+        metadata = reader.metadata or {}
+        if "/HiddenMessage" not in metadata:
+            return "No hidden message found; file unchanged."
+
+        def writer(temp_path: Path):
+            writer_obj = PdfWriter()
+            writer_obj.append(reader)
+            remaining_metadata = {k: v for k, v in metadata.items() if k != "/HiddenMessage"}
+            if remaining_metadata:
+                writer_obj.add_metadata(remaining_metadata)
+            writer_obj.write(str(temp_path))
+
+        self._write_in_place(self.carrier, writer)
+        return "Cleared"

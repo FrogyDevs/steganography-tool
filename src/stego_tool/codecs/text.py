@@ -54,3 +54,20 @@ class TextCodec:
             for index in range(0, len(bits) - 7, 8)
         ]
         return ''.join(chars)
+
+    def clear(self, input_path=None, output_path=None):
+        input_path = str(input_path or self.carrier)
+        output_path = str(output_path or input_path)
+
+        carrier_content = Path(input_path).read_text(encoding='utf-8')
+        if not any(character in '​‌' for character in carrier_content):
+            return 'No hidden message found; file unchanged.'
+
+        def writer(temp_path: Path):
+            cleaned_content = ''.join(
+                character for character in carrier_content if character not in '​‌'
+            )
+            temp_path.write_text(cleaned_content, encoding='utf-8')
+
+        self._write_in_place(output_path, writer)
+        return 'Cleared'

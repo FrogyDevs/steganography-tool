@@ -83,3 +83,50 @@ class VideoCodec:
                     return self._bits_to_text(message_bits)
         cap.release()
         return "No hidden message found."
+
+    def _has_hidden_message(self) -> bool:
+        cap = cv2.VideoCapture(self.carrier)
+        bits = []
+        try:
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                flat = frame.reshape(-1)
+                for byte in flat:
+                    bits.append(str(byte & 1))
+                    if len(bits) >= 16 and ''.join(bits[-16:]) == self.delimiter:
+                        return True
+            return False
+        finally:
+            cap.release()
+
+    def clear(self):
+        if not self._has_hidden_message():
+            return "No hidden message found; file unchanged."
+
+        def writer(temp_path: Path):
+            cap = cv2.VideoCapture(self.carrier)
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+            fourcc = cv2.VideoWriter_fourcc(*'FFV1')
+            out = cv2.VideoWriter(str(temp_path), fourcc, fps, (width, height))
+
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                flat = frame.reshape(-1)
+                flat &= np.uint8(0xFE)
+                frame = flat.reshape(frame.shape)
+                out.write(frame)
+
+            cap.release()
+            out.release()
+
+        self._write_in_place(self.carrier, writer)
+        return "Cleared"

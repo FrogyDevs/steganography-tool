@@ -43,3 +43,19 @@ class AudioCodec:
 
         start += len(self.start_marker)
         return content[start:end].decode('utf-8', errors='replace')
+
+    def clear(self):
+        with open(self.carrier, 'rb') as f:
+            content = f.read()
+
+        start = content.find(self.start_marker)
+        end = content.find(self.end_marker)
+
+        if start == -1 or end == -1:
+            return "No hidden message found; file unchanged."
+
+        def writer(temp_path: Path):
+            temp_path.write_bytes(content[:start])
+
+        self._write_in_place(self.carrier, writer)
+        return "Cleared"
