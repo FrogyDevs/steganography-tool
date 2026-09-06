@@ -6,7 +6,7 @@
 - [X] ~~Video Files~~
 - [ ] Office Documents
 - [ ] Executables
-- [ ] CLI
+- [X] CLI
 
 ### Disclaimer
 
